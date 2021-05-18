@@ -1,0 +1,2 @@
+# QTA
+Trading Algorithm
