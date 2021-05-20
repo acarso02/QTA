@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from pandas_datareader import data
+import pandas as pd
+import datetime as dt
+
 
 class ClassifyBar:
     __near = 0.005         #Definition of "close enough" used in is_doji method
@@ -125,11 +129,19 @@ class ClassifyBar:
                 return True
         
         return False
+
+def get_data(symbol = 'AAPL', start = dt.datetime(2015, 1, 1), 
+    end = dt.datetime(2018, 2, 8)):
+
+    data_frame = data.DataReader(symbol, 'yahoo', start, end)
+
+    return data_frame
+
+
+def make_csv(data_frame, name):
+    data_frame.to_csv(name + '.csv')
+
     
-# class RetrieveData:
-#     def init():
-#         pass
-        
 # class FormatData:
 #     def init():
 #         pass

@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from quantTradingAlgorithm.main import SimpleCalculator
-
+import quantTradingAlgorithm.main as QTA
 from quantTradingAlgorithm.main import ClassifyBar
 import math as m
+from pandas_datareader import data
+import pandas as pd
+import datetime as dt
+import filecmp
+import os
 # from quantTradingAlgorithm.main import RetrieveData
 # from quantTradingAlgorithm.main import FormatData
 # from quantTradingAlgorithm.main import ConsolidateBar
@@ -45,7 +50,7 @@ def test_bar_has_no_topping_tail():
     # check for topping tail green bar
     bar = ClassifyBar(4.0, 5.3, 5.3, 3.5, 50000)
     result = bar.top_tail()
-    assert result == 1
+    assert result == 0
 
 def test_bar_is_doji():
     bar = ClassifyBar(4.0, 4.002, 6.2, 3.5, 50000)
@@ -152,18 +157,42 @@ def test_bar_is_ending_move():
 ################################
 # Unit Tests (RetrieveData)
 ################################
+def test_read_data_from_yahoo():
+    #checks to make sure the dataframe is returned
+    start = dt.datetime(2018, 1, 1)
+    end = dt.datetime(2020, 6, 2)
 
-# def test_input_start_date_is_valid():
-#     assert result == True
+    result = QTA.get_data('AAPL', start, end)
 
-# def test_input_end_date_is_valid():
-#     assert result == True
+    assert (result.empty == False)
 
-# def test_read_data_from_yahoo():
-#     assert result == []
+def test_input_start_date_is_valid():
+    start = dt.datetime(2018, 1, 1)
+    end = dt.datetime(2020, 6, 2)
+    result = QTA.get_data('AAPL', start, end)
 
-# def test_output_to_csv():
-#     assert result == []
+    assert (result.iloc[0].name == dt.datetime(2018, 1, 2))
+
+def test_input_end_date_is_valid():
+    start = dt.datetime(2018, 1, 1)
+    end = dt.datetime(2020, 6, 2)
+    result = QTA.get_data('AAPL', start, end)
+
+    assert (result.iloc[-1].name == dt.datetime(2020, 6, 2))
+
+def test_output_to_csv():
+    #Makes a data_frame from tsla, prints it to a csv and compares 
+    #to existing one
+    start = dt.datetime(2018, 1, 1)
+    end = dt.datetime(2020, 6, 2)
+    F1 = "tests/AAPL_correct.csv"
+
+    result = QTA.get_data('AAPL', start, end)
+    QTA.make_csv(result, 'AAPL')
+    F2 = "AAPL.csv"
+
+    assert filecmp.cmp(F1, F2)
+    os.remove("AAPL.csv")
 
 ################################
 # Unit Tests (FormatData)
