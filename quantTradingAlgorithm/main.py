@@ -7,7 +7,7 @@ import datetime as dt
 class ClassifyBar:
     __near = 0.005         #Definition of "close enough" used in is_doji method
     
-    def __init__(self, open, close, high, low, volume):
+    def __init__(self, open, close, high, low, volume, date = dt.datetime(2018, 5, 3)):
         self.open = open
         self.close = close
         self.high = high
@@ -20,7 +20,10 @@ class ClassifyBar:
         Checks the polarity of the bar
         returns: true if green or doji
         """
-        return self.open <= self.close
+        if self.open <= self.close:
+            return True
+        
+        return False
 
     def top_tail(self):
         """
@@ -137,10 +140,16 @@ def get_data(symbol = 'AAPL', start = dt.datetime(2015, 1, 1),
 
     return data_frame
 
-
 def make_csv(data_frame, name):
     data_frame.to_csv(name + '.csv')
 
+def create_bar_list(data_frame):
+    output = []
+    i = 0
+    for i in range(len(data_frame)):
+        output.append(ClassifyBar(data_frame.iat[i,3], data_frame.iat[i,4], data_frame.iat[i,1], data_frame.iat[i,2], data_frame.iat[i,5]))
+    
+    return output
     
 # class FormatData:
 #     def init():

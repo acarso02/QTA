@@ -17,10 +17,11 @@ import os
 # Unit Tests (ClassifyBar)
 ################################
 
-def test_bar_is_green():
-    bar = ClassifyBar(4.0, 5.0, 6.2, 4.0, 50000)
+def test_bar_is_not_green():
+    bar = ClassifyBar(5.0, 4.0, 6.0, 2.0, 60000)
     result = bar.polarity()
-    assert result == True
+
+    assert result == False
 
 def test_bar_has_bottoming_tail():
     # check for bottoming tail green bar
@@ -167,11 +168,11 @@ def test_read_data_from_yahoo():
     assert (result.empty == False)
 
 def test_input_start_date_is_valid():
-    start = dt.datetime(2018, 1, 1)
+    start = dt.datetime(2018, 1, 5)
     end = dt.datetime(2020, 6, 2)
     result = QTA.get_data('AAPL', start, end)
 
-    assert (result.iloc[0].name == dt.datetime(2018, 1, 2))
+    assert (result.iloc[0].name == dt.datetime(2018, 1, 5))
 
 def test_input_end_date_is_valid():
     start = dt.datetime(2018, 1, 1)
@@ -193,6 +194,19 @@ def test_output_to_csv():
 
     assert filecmp.cmp(F1, F2)
     os.remove("AAPL.csv")
+
+def test_df_to_bar_list():
+
+    i = 0
+    start = dt.datetime(2019, 1, 2)
+    end = dt.datetime(2020, 6, 2)
+    result = QTA.get_data('AAPL', start, end)
+
+    bars = QTA.create_bar_list(result)
+    for i in range(len(bars)):
+        print(bars[i].open)
+
+    assert True
 
 ################################
 # Unit Tests (FormatData)
