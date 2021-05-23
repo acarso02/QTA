@@ -203,10 +203,12 @@ def test_df_to_bar_list():
     result = QTA.get_data('AAPL', start, end)
 
     bars = QTA.create_bar_list(result)
-    for i in range(len(bars)):
-        print(bars[i].open)
+    #for i in range(len(bars)):
+    #    print('date: ' + str(bars[i].date) + ' open: ' 
+    #    + str(bars[i].open) + '  close: ' 
+    #    + str(bars[i].close) )
 
-    assert True
+    assert not (bars == None)
 
 ################################
 # Unit Tests (FormatData)
