@@ -13,6 +13,7 @@ class ClassifyBar:
         self.high = high
         self.low = low
         self.volume = volume
+        self.date = date
         self.range = self.get_range()
 
     def polarity(self):
@@ -121,7 +122,8 @@ class ClassifyBar:
         """
         Checks if the current bar is an ending move 
         :params: recent_bars: list of n bars preceding the current bar
-        :params: SRLevel: support or resistance level
+        :params: support: support price level
+        :params: resistance: resistance price level        
         :returns: True if criteria met, false if not
         """
         if (self.is_wide_range(recent_bars)
@@ -144,10 +146,18 @@ def make_csv(data_frame, name):
     data_frame.to_csv(name + '.csv')
 
 def create_bar_list(data_frame):
+    """
+    Converts a data frame to a list of bars
+    :params: data_frame: pandas data frame of stock data
+    :returns: List of bars
+    """
     output = []
     i = 0
     for i in range(len(data_frame)):
-        output.append(ClassifyBar(data_frame.iat[i,3], data_frame.iat[i,4], data_frame.iat[i,1], data_frame.iat[i,2], data_frame.iat[i,5]))
+        output.append(ClassifyBar(data_frame.iat[i,2], 
+        data_frame.iat[i,3], data_frame.iat[i,0], 
+        data_frame.iat[i,1], data_frame.iat[i,4], 
+        data_frame.iloc[i].name))
     
     return output
     
